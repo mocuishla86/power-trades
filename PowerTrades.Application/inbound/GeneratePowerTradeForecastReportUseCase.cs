@@ -1,6 +1,6 @@
 ﻿using PowerTrades.Application.outbound;
 using PowerTrades.Domain.date;
-using PowerTrades.Domain.powertrade;
+using PowerTrades.Domain.Power;
 
 namespace PowerTrades.Application.inbound
 {

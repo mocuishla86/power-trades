@@ -1,7 +1,7 @@
 using FluentAssertions;
-using PowerTrades.Domain.powertrade;
+using PowerTrades.Domain.Power;
 
-namespace PowerTrades.Domain.Test
+namespace PowerTrades.Domain.Test.Power
 {
     public class PowerPeriodTest
     {
@@ -10,10 +10,10 @@ namespace PowerTrades.Domain.Test
         {
             var powerPeriod1 = new PowerPeriod { HourOfTheDay = 3, Volume = 50 };
             var powerPeriod2 = new PowerPeriod { HourOfTheDay = 3, Volume = 80 };
-            
+
             var sum = powerPeriod1 + powerPeriod2;
 
-            sum.Should().BeEquivalentTo(new PowerPeriod { HourOfTheDay = 3,Volume = 130 });
+            sum.Should().BeEquivalentTo(new PowerPeriod { HourOfTheDay = 3, Volume = 130 });
         }
 
         [Fact]

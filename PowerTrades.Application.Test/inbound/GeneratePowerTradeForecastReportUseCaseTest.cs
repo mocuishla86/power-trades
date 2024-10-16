@@ -3,7 +3,7 @@ using NSubstitute;
 using PowerTrades.Application.inbound;
 using PowerTrades.Application.outbound;
 using PowerTrades.Domain.date;
-using PowerTrades.Domain.powertrade;
+using PowerTrades.Domain.Power;
 
 namespace PowerTrades.Application.Test.inbound
 {
