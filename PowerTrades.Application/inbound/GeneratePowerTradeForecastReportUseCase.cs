@@ -8,10 +8,15 @@ namespace PowerTrades.Application.inbound
         private const int HOURS_IN_DAY = 24;
 
         public PowerTradeForecastReport Generate() {
+            List<PowerTrade> powerTrades = powerTradeRepository.GetPowerTrades(DateTime.Now);
+            var aggregatedPowerTrade = powerTrades.Aggregate((a, b) => a + b);
+
             return new PowerTradeForecastReport
             {
                 Periods = Enumerable.Range(1, HOURS_IN_DAY)
-                            .Select(index => new ForecastedPowerPeriod { DateTime = DateTime.Now, AggregatedVolume = 33 })
+                            .Select(hourOfTheDay => new ForecastedPowerPeriod {
+                                DateTime = DateTime.Now,
+                                AggregatedVolume = aggregatedPowerTrade.GetPeriod(hourOfTheDay).Volume })
                             .ToList()
             };
            }

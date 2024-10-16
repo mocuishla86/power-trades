@@ -22,6 +22,7 @@ namespace PowerTrades.Application.Test.inbound
             PowerTradeForecastReport report = sut.Generate();
 
             report.Periods.Should().HaveCount(24);
+            report.Periods.Should().AllSatisfy(period => period.AggregatedVolume.Should().Be(150));
         }
     }
 }

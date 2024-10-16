@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PowerTrades.Application", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerTrades.Application.Test", "PowerTrades.Application.Test\PowerTrades.Application.Test.csproj", "{D87B5356-10A5-4691-A5B9-E73E8C5FD419}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerTrades.Domain.Test", "PowerTrades.Domain.Test\PowerTrades.Domain.Test.csproj", "{6365399A-8D6D-41AB-8D44-0363C36CD6E6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{D87B5356-10A5-4691-A5B9-E73E8C5FD419}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D87B5356-10A5-4691-A5B9-E73E8C5FD419}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D87B5356-10A5-4691-A5B9-E73E8C5FD419}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6365399A-8D6D-41AB-8D44-0363C36CD6E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6365399A-8D6D-41AB-8D44-0363C36CD6E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6365399A-8D6D-41AB-8D44-0363C36CD6E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6365399A-8D6D-41AB-8D44-0363C36CD6E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
