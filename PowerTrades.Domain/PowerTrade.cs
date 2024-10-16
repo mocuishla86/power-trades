@@ -9,10 +9,9 @@ namespace PowerTrades.domain
 
         public static PowerTrade WithAllPeriodsWithVolume(int volume)
         {
-            var periods = new List<PowerPeriod>();
-            for (int i = 1; i <= HOURS_IN_DAY; i++) {
-                periods.Add(new PowerPeriod { HourOfTheDay = i, Volume = volume });
-            }
+            var periods = Enumerable.Range(1, HOURS_IN_DAY)
+                .Select(hourOfTheDay => new PowerPeriod { HourOfTheDay = hourOfTheDay, Volume = volume })
+                .ToList();
             return new PowerTrade {  Periods = periods };
         }
     }
