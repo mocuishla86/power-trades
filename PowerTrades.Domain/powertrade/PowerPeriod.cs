@@ -1,4 +1,4 @@
-﻿namespace PowerTrades.domain
+﻿namespace PowerTrades.Domain.powertrade
 {
     public class PowerPeriod
     {
@@ -8,7 +8,7 @@
 
         public static PowerPeriod operator +(PowerPeriod a, PowerPeriod b)
         {
-            if(a.HourOfTheDay != b.HourOfTheDay)
+            if (a.HourOfTheDay != b.HourOfTheDay)
             {
                 throw new ArgumentException("Only power periods with same hour of the day can be summed");
             }

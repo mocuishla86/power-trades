@@ -1,14 +1,15 @@
 ﻿using PowerTrades.Application.outbound;
-using PowerTrades.domain;
+using PowerTrades.Domain.date;
+using PowerTrades.Domain.powertrade;
 
 namespace PowerTrades.Application.inbound
 {
-    public class GeneratePowerTradeForecastReportUseCase(IPowerTradeRepository powerTradeRepository)
+    public class GeneratePowerTradeForecastReportUseCase(IPowerTradeRepository powerTradeRepository, IDateTimeService dateTimeService)
     {
         private const int HOURS_IN_DAY = 24;
 
         public PowerTradeForecastReport Generate() {
-            List<PowerTrade> powerTrades = powerTradeRepository.GetPowerTrades(DateTime.Now); //TODO: Include right date
+            List<PowerTrade> powerTrades = powerTradeRepository.GetPowerTrades(dateTimeService.GetCurrentDateTime().Date.AddDays(1)); 
             var aggregatedPowerTrade = powerTrades.Aggregate((a, b) => a + b);
 
             return new PowerTradeForecastReport

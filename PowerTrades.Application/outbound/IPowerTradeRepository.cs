@@ -1,4 +1,4 @@
-﻿using PowerTrades.domain;
+﻿using PowerTrades.Domain.powertrade;
 
 namespace PowerTrades.Application.outbound
 {

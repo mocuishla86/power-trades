@@ -1,4 +1,4 @@
-﻿namespace PowerTrades.domain
+﻿namespace PowerTrades.Domain.powertrade
 {
     public class PowerTradeForecastReport
     {

@@ -1,5 +1,5 @@
 using FluentAssertions;
-using PowerTrades.domain;
+using PowerTrades.Domain.powertrade;
 
 namespace PowerTrades.Domain.Test
 {

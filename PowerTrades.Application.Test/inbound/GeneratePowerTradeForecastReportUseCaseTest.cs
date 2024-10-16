@@ -2,7 +2,8 @@ using FluentAssertions;
 using NSubstitute;
 using PowerTrades.Application.inbound;
 using PowerTrades.Application.outbound;
-using PowerTrades.domain;
+using PowerTrades.Domain.date;
+using PowerTrades.Domain.powertrade;
 
 namespace PowerTrades.Application.Test.inbound
 {
@@ -11,9 +12,12 @@ namespace PowerTrades.Application.Test.inbound
         [Fact]
         public void shoud_create_report_from_power_trade_list()
         {
+            DateTime now = new DateTime(2007, 3, 2, 0, 23, 12);
             IPowerTradeRepository powerTradeRepository = Substitute.For<IPowerTradeRepository>();
-            var sut = new GeneratePowerTradeForecastReportUseCase(powerTradeRepository);
-            powerTradeRepository.GetPowerTrades(Arg.Any<DateTime>()).Returns(
+            IDateTimeService dateTimeService = Substitute.For<IDateTimeService>();
+            dateTimeService.GetCurrentDateTime().Returns(now);
+            var sut = new GeneratePowerTradeForecastReportUseCase(powerTradeRepository, dateTimeService);
+            powerTradeRepository.GetPowerTrades(new DateTime(2007,3,3)).Returns(
             [
                 PowerTrade.WithAllPeriodsWithVolume(100),
                 PowerTrade.WithAllPeriodsWithVolume(50),

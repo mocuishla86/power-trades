@@ -1,5 +1,4 @@
-﻿
-namespace PowerTrades.domain
+﻿namespace PowerTrades.Domain.powertrade
 {
     public class PowerTrade
     {
@@ -22,7 +21,7 @@ namespace PowerTrades.domain
             var periods = Enumerable.Range(1, HOURS_IN_DAY)
                 .Select(hourOfTheDay => new PowerPeriod { HourOfTheDay = hourOfTheDay, Volume = volume })
                 .ToList();
-            return new PowerTrade {  Periods = periods };
+            return new PowerTrade { Periods = periods };
         }
     }
 
