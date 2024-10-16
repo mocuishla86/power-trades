@@ -9,7 +9,8 @@ namespace PowerTrades.Application.inbound
         private const int HOURS_IN_DAY = 24;
 
         public PowerTradeForecastReport Generate() {
-            DateTime forecastedDay = dateTimeService.GetCurrentDateTime().Date.AddDays(1);
+            DateTime executionTimeStamp = dateTimeService.GetCurrentDateTime();
+            DateTime forecastedDay = executionTimeStamp.Date.AddDays(1);
             List<PowerTrade> powerTrades = powerTradeRepository.GetPowerTrades(forecastedDay); 
             var aggregatedPowerTrade = powerTrades.Aggregate((a, b) => a + b);
 
@@ -21,8 +22,8 @@ namespace PowerTrades.Application.inbound
                                 DateTime = DateTime.Now, //TODO: Include right date
                                 AggregatedVolume = aggregatedPowerTrade.GetPeriod(hourOfTheDay).Volume })
                             .ToList(),
-                ForecastedDay = forecastedDay
-                //TODO: ExecutionTimestamp
+                ForecastedDay = forecastedDay,
+                ExecutionTimestamp = executionTimeStamp
             };
            }
     }
