@@ -27,6 +27,7 @@ namespace PowerTrades.Application.Test.inbound
 
             report.Periods.Should().HaveCount(24);
             report.Periods.Should().AllSatisfy(period => period.AggregatedVolume.Should().Be(150));
+            report.ForecastedDay.Should().Be(new DateTime(2007, 3, 3));
         }
     }
 }
