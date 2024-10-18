@@ -24,7 +24,7 @@ namespace PowerTrades.Application.Test.inbound
                 PowerTrade.WithAllPeriodsWithVolume(50),
             ]);
 
-            PowerTradeForecastReport report = sut.Generate();
+            PowerTradeForecastReport report = sut.GenerateForecastReport();
 
             report.Periods.Should().HaveCount(24);
             report.Periods.Should().AllSatisfy(period => period.AggregatedVolume.Should().Be(150));
@@ -41,7 +41,7 @@ namespace PowerTrades.Application.Test.inbound
             var sut = new GeneratePowerTradeForecastReportUseCase(powerTradeRepository, dateTimeService);
             powerTradeRepository.GetPowerTrades(expectedForecastedDay).Returns([PowerTrade.WithAllPeriodsWithVolume(100)]);
 
-            PowerTradeForecastReport report = sut.Generate();
+            PowerTradeForecastReport report = sut.GenerateForecastReport();
 
             report.ForecastedDay.Should().Be(expectedForecastedDay);
             report.ExecutionTimestamp.Should().Be(expectedTimestamp);

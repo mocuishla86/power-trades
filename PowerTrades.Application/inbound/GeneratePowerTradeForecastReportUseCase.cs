@@ -12,7 +12,7 @@ namespace PowerTrades.Application.inbound
     {
         private const int HOURS_IN_DAY = 24;
 
-        public PowerTradeForecastReport Generate() {
+        public PowerTradeForecastReport GenerateForecastReport() {
             NodaTime.DateTimeZone zone = dateTimeService.GetLocalDateTimeZone();
             DateTime executionTimeStampInLocalTime = dateTimeService.GetCurrentLocalDateTime();
             DateTime forecastedDay = executionTimeStampInLocalTime.Date.AddDays(1);
