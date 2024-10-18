@@ -1,29 +1,31 @@
 ﻿using NodaTime;
-using PowerTrades.Application.outbound;
-using PowerTrades.Domain.date;
 using PowerTrades.Domain.Power;
 using NodaTime.TimeZones;
 using NodaTime.Text;
 using System.Globalization;
 using Microsoft.Extensions.Logging;
+using PowerTrades.Application.Outbound;
+using PowerTrades.Domain.Date;
 
-namespace PowerTrades.Application.inbound
+namespace PowerTrades.Application.Inbound
 {
     public class GeneratePowerTradeForecastReportUseCase(
-        IPowerTradeRepository powerTradeRepository, 
+        IPowerTradeRepository powerTradeRepository,
         IDateTimeService dateTimeService,
         ILogger<GeneratePowerTradeForecastReportUseCase> log
         )
     {
         private const int HOURS_IN_DAY = 24;
 
-        public PowerTradeForecastReport GenerateForecastReport() {
+        public PowerTradeForecastReport GenerateForecastReport()
+        {
             log.LogInformation("Generating forecast report");
-            NodaTime.DateTimeZone zone = dateTimeService.GetLocalDateTimeZone();
+            DateTimeZone zone = dateTimeService.GetLocalDateTimeZone();
             DateTime executionTimeStampInLocalTime = dateTimeService.GetCurrentLocalDateTime();
             DateTime forecastedDay = executionTimeStampInLocalTime.Date.AddDays(1);
             DateTime firstRowDateTimeInUtc = LocalTimeToUTC(zone, forecastedDay);
-            List<PowerTrade> powerTrades = powerTradeRepository.GetPowerTrades(forecastedDay); 
+
+            List<PowerTrade> powerTrades = powerTradeRepository.GetPowerTrades(forecastedDay);
             var aggregatedPowerTrade = powerTrades.Aggregate((a, b) => a + b);
 
             return new PowerTradeForecastReport
@@ -32,12 +34,13 @@ namespace PowerTrades.Application.inbound
                             .Select(hourOfTheDay => new ForecastedPowerPeriod
                             {
                                 DateTime = firstRowDateTimeInUtc.AddHours(hourOfTheDay - 1),
-                                AggregatedVolume = aggregatedPowerTrade.GetPeriod(hourOfTheDay).Volume })
+                                AggregatedVolume = aggregatedPowerTrade.GetPeriod(hourOfTheDay).Volume
+                            })
                             .ToList(),
                 ForecastedDay = forecastedDay,
                 ExecutionTimestamp = LocalTimeToUTC(zone, executionTimeStampInLocalTime)
             };
-           }
+        }
 
         static DateTime LocalTimeToUTC(DateTimeZone timeZone, DateTime dateTime)
         {

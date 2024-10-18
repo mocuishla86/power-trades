@@ -1,23 +1,32 @@
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using NodaTime;
 using NSubstitute;
-using PowerTrades.Application.inbound;
-using PowerTrades.Application.outbound;
-using PowerTrades.Domain.date;
+using PowerTrades.Application.Inbound;
+using PowerTrades.Application.Outbound;
+using PowerTrades.Domain.Date;
 using PowerTrades.Domain.Power;
 
-namespace PowerTrades.Application.Test.inbound
+namespace PowerTrades.Application.Test.Inbound
 {
     public class GeneratePowerTradeForecastReportUseCaseTest
     {
+        private IPowerTradeRepository powerTradeRepository;
+        private IDateTimeService dateTimeService;
+        private GeneratePowerTradeForecastReportUseCase sut;
+
+        public GeneratePowerTradeForecastReportUseCaseTest()
+        {
+            powerTradeRepository = Substitute.For<IPowerTradeRepository>();
+            dateTimeService = Substitute.For<IDateTimeService>();
+            sut = new GeneratePowerTradeForecastReportUseCase(powerTradeRepository, dateTimeService, Substitute.For<ILogger<GeneratePowerTradeForecastReportUseCase>>());
+        }
+
         [Fact]
         public void shoud_create_report_from_power_trade_list()
         {
-            IPowerTradeRepository powerTradeRepository = Substitute.For<IPowerTradeRepository>();
-            IDateTimeService dateTimeService = Substitute.For<IDateTimeService>();
             dateTimeService.GetCurrentLocalDateTime().Returns(DateTime.Now);
             dateTimeService.GetLocalDateTimeZone().Returns(DateTimeZoneProviders.Tzdb["Europe/Madrid"]);
-            var sut = new GeneratePowerTradeForecastReportUseCase(powerTradeRepository, dateTimeService);
             powerTradeRepository.GetPowerTrades(Arg.Any<DateTime>()).Returns(
             [
                 PowerTrade.WithAllPeriodsWithVolume(100),
@@ -32,13 +41,10 @@ namespace PowerTrades.Application.Test.inbound
 
         [Theory]
         [MemberData(nameof(DateTimeScenarios))]
-        public void date_time_conversion_is_correctly_managed(DateTime localDateTime, String localTimeZone, DateTime expectedForecastedDay, DateTime expectedTimestamp, DateTime expectedFirstPeriodDateTime)
+        public void date_time_conversion_is_correctly_managed(DateTime localDateTime, string localTimeZone, DateTime expectedForecastedDay, DateTime expectedTimestamp, DateTime expectedFirstPeriodDateTime)
         {
-            IPowerTradeRepository powerTradeRepository = Substitute.For<IPowerTradeRepository>();
-            IDateTimeService dateTimeService = Substitute.For<IDateTimeService>();
             dateTimeService.GetCurrentLocalDateTime().Returns(localDateTime);
             dateTimeService.GetLocalDateTimeZone().Returns(DateTimeZoneProviders.Tzdb[localTimeZone]);
-            var sut = new GeneratePowerTradeForecastReportUseCase(powerTradeRepository, dateTimeService);
             powerTradeRepository.GetPowerTrades(expectedForecastedDay).Returns([PowerTrade.WithAllPeriodsWithVolume(100)]);
 
             PowerTradeForecastReport report = sut.GenerateForecastReport();
@@ -48,7 +54,7 @@ namespace PowerTrades.Application.Test.inbound
             report.Periods[0].DateTime.Should().Be(expectedFirstPeriodDateTime);
         }
 
-        public static TheoryData<DateTime, String, DateTime, DateTime, DateTime> DateTimeScenarios => new TheoryData<DateTime, String, DateTime, DateTime, DateTime>
+        public static TheoryData<DateTime, string, DateTime, DateTime, DateTime> DateTimeScenarios => new TheoryData<DateTime, string, DateTime, DateTime, DateTime>
         {
             { new DateTime(2007,1,5,15,0,0), "Europe/Lisbon", new DateTime(2007,1,6), new DateTime(2007,1,5,15,0,0), new DateTime(2007,1,6,0,0,0) },
             { new DateTime(2007,7,5,15,0,0), "Europe/Lisbon", new DateTime(2007,7,6), new DateTime(2007,7,5,14,0,0), new DateTime(2007,7,5,23,0,0) },

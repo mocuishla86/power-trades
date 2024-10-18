@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using PowerTrades.Application.inbound;
-using PowerTrades.Application.outbound;
-using PowerTrades.Domain.date;
+using PowerTrades.Application.Inbound;
+using PowerTrades.Application.Outbound;
 using PowerTrades.Domain.Date;
 using PowerTrades.Infrastructure.Outbound;
 using Serilog;

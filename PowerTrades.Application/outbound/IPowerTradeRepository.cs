@@ -1,6 +1,6 @@
 ﻿using PowerTrades.Domain.Power;
 
-namespace PowerTrades.Application.outbound
+namespace PowerTrades.Application.Outbound
 {
     public interface IPowerTradeRepository
     {
