@@ -12,14 +12,16 @@ namespace PowerTrades.Application.Test.Inbound
     public class GeneratePowerTradeForecastReportUseCaseTest
     {
         private IPowerTradeRepository powerTradeRepository;
+        private IPowerTradeForecastReportRepository reportRepository;
         private IDateTimeService dateTimeService;
         private GeneratePowerTradeForecastReportUseCase sut;
 
         public GeneratePowerTradeForecastReportUseCaseTest()
         {
             powerTradeRepository = Substitute.For<IPowerTradeRepository>();
+            reportRepository = Substitute.For<IPowerTradeForecastReportRepository>();
             dateTimeService = Substitute.For<IDateTimeService>();
-            sut = new GeneratePowerTradeForecastReportUseCase(powerTradeRepository, dateTimeService, Substitute.For<ILogger<GeneratePowerTradeForecastReportUseCase>>());
+            sut = new GeneratePowerTradeForecastReportUseCase(powerTradeRepository, reportRepository, dateTimeService, Substitute.For<ILogger<GeneratePowerTradeForecastReportUseCase>>());
         }
 
         [Fact]
@@ -33,10 +35,11 @@ namespace PowerTrades.Application.Test.Inbound
                 PowerTrade.WithAllPeriodsWithVolume(50),
             ]);
 
-            PowerTradeForecastReport report = sut.GenerateForecastReport();
+            var report = sut.GenerateForecastReport();
 
             report.Periods.Should().HaveCount(24);
             report.Periods.Should().AllSatisfy(period => period.AggregatedVolume.Should().Be(150));
+            reportRepository.Received().SaveReport(report);
         }
 
         [Theory]
@@ -51,7 +54,8 @@ namespace PowerTrades.Application.Test.Inbound
 
             report.ForecastedDay.Should().Be(expectedForecastedDay);
             report.ExecutionTimestamp.Should().Be(expectedTimestamp);
-            report.Periods[0].DateTime.Should().Be(expectedFirstPeriodDateTime);
+            report.Periods[0].DateTimeInUtc.Should().Be(expectedFirstPeriodDateTime);
+            reportRepository.Received().SaveReport(report);
         }
 
         public static TheoryData<DateTime, string, DateTime, DateTime, DateTime> DateTimeScenarios => new TheoryData<DateTime, string, DateTime, DateTime, DateTime>

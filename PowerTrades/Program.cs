@@ -19,6 +19,7 @@ ConfigureLogging(builder);
 
 builder.Services.AddSingleton<PowerService>();
 builder.Services.AddSingleton<IPowerTradeRepository, AxpoPowerTradeRepository>();
+builder.Services.AddSingleton<IPowerTradeForecastReportRepository, ConsolePowerTradeForecastReportRepository>();
 builder.Services.AddSingleton<IDateTimeService, RealDateTimeService>();
 builder.Services.AddSingleton<GeneratePowerTradeForecastReportUseCase>();
 

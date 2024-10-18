@@ -11,6 +11,7 @@ namespace PowerTrades.Application.Inbound
 {
     public class GeneratePowerTradeForecastReportUseCase(
         IPowerTradeRepository powerTradeRepository,
+        IPowerTradeForecastReportRepository reportRepository,
         IDateTimeService dateTimeService,
         ILogger<GeneratePowerTradeForecastReportUseCase> log
         )
@@ -21,6 +22,7 @@ namespace PowerTrades.Application.Inbound
         {
             log.LogInformation("Generating forecast report");
             DateTimeZone zone = dateTimeService.GetLocalDateTimeZone();
+            log.LogInformation($"Current time zone: {zone.Id}");
             DateTime executionTimeStampInLocalTime = dateTimeService.GetCurrentLocalDateTime();
             DateTime forecastedDay = executionTimeStampInLocalTime.Date.AddDays(1);
             DateTime firstRowDateTimeInUtc = LocalTimeToUTC(zone, forecastedDay);
@@ -28,18 +30,20 @@ namespace PowerTrades.Application.Inbound
             List<PowerTrade> powerTrades = powerTradeRepository.GetPowerTrades(forecastedDay);
             var aggregatedPowerTrade = powerTrades.Aggregate((a, b) => a + b);
 
-            return new PowerTradeForecastReport
+            var report = new PowerTradeForecastReport
             {
                 Periods = Enumerable.Range(1, HOURS_IN_DAY)
                             .Select(hourOfTheDay => new ForecastedPowerPeriod
                             {
-                                DateTime = firstRowDateTimeInUtc.AddHours(hourOfTheDay - 1),
+                                DateTimeInUtc = firstRowDateTimeInUtc.AddHours(hourOfTheDay - 1),
                                 AggregatedVolume = aggregatedPowerTrade.GetPeriod(hourOfTheDay).Volume
                             })
                             .ToList(),
                 ForecastedDay = forecastedDay,
                 ExecutionTimestamp = LocalTimeToUTC(zone, executionTimeStampInLocalTime)
             };
+            reportRepository.SaveReport(report);
+            return report;
         }
 
         static DateTime LocalTimeToUTC(DateTimeZone timeZone, DateTime dateTime)

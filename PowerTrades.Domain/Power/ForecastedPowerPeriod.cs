@@ -2,7 +2,7 @@
 {
     public class ForecastedPowerPeriod
     {
-        public DateTime DateTime { get; set; }
+        public DateTime DateTimeInUtc { get; set; }
 
         public double AggregatedVolume { get; set; }
     }
