@@ -33,7 +33,7 @@ static void Run(IServiceProvider hostProvider)
 
     var useCase = provider.GetRequiredService<GeneratePowerTradeForecastReportUseCase>();
 
-    useCase.GenerateForecastReport();
+    useCase.GenerateForecastReport("c:/");
 
     Console.WriteLine("Application finished...");
 }

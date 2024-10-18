@@ -35,11 +35,11 @@ namespace PowerTrades.Application.Test.Inbound
                 PowerTrade.WithAllPeriodsWithVolume(50),
             ]);
 
-            var report = sut.GenerateForecastReport();
+            var report = sut.GenerateForecastReport("destination");
 
             report.Periods.Should().HaveCount(24);
             report.Periods.Should().AllSatisfy(period => period.AggregatedVolume.Should().Be(150));
-            reportRepository.Received().SaveReport(report);
+            reportRepository.Received().SaveReport(report, "destination");
         }
 
         [Theory]
@@ -50,12 +50,12 @@ namespace PowerTrades.Application.Test.Inbound
             dateTimeService.GetLocalDateTimeZone().Returns(DateTimeZoneProviders.Tzdb[localTimeZone]);
             powerTradeRepository.GetPowerTrades(expectedForecastedDay).Returns([PowerTrade.WithAllPeriodsWithVolume(100)]);
 
-            PowerTradeForecastReport report = sut.GenerateForecastReport();
+            PowerTradeForecastReport report = sut.GenerateForecastReport("destination");
 
             report.ForecastedDay.Should().Be(expectedForecastedDay);
             report.ExecutionTimestamp.Should().Be(expectedTimestamp);
             report.Periods[0].DateTimeInUtc.Should().Be(expectedFirstPeriodDateTime);
-            reportRepository.Received().SaveReport(report);
+            reportRepository.Received().SaveReport(report, "destination");
         }
 
         public static TheoryData<DateTime, string, DateTime, DateTime, DateTime> DateTimeScenarios => new TheoryData<DateTime, string, DateTime, DateTime, DateTime>

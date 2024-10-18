@@ -18,7 +18,7 @@ namespace PowerTrades.Application.Inbound
     {
         private const int HOURS_IN_DAY = 24;
 
-        public PowerTradeForecastReport GenerateForecastReport()
+        public PowerTradeForecastReport GenerateForecastReport(String destination)
         {
             log.LogInformation("Generating forecast report");
             DateTimeZone zone = dateTimeService.GetLocalDateTimeZone();
@@ -42,7 +42,7 @@ namespace PowerTrades.Application.Inbound
                 ForecastedDay = forecastedDay,
                 ExecutionTimestamp = LocalTimeToUTC(zone, executionTimeStampInLocalTime)
             };
-            reportRepository.SaveReport(report);
+            reportRepository.SaveReport(report, destination);
             return report;
         }
 

@@ -9,6 +9,6 @@ namespace PowerTrades.Application.Outbound
 {
     public interface IPowerTradeForecastReportRepository
     {
-        void SaveReport(PowerTradeForecastReport report);
+        void SaveReport(PowerTradeForecastReport report, String destination);
     }
 }

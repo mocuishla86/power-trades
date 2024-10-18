@@ -11,7 +11,7 @@ namespace PowerTrades.Infrastructure.Outbound
 {
     public class ConsolePowerTradeForecastReportRepository(ILogger<ConsolePowerTradeForecastReportRepository> log) : IPowerTradeForecastReportRepository
     {
-        public void SaveReport(PowerTradeForecastReport report)
+        public void SaveReport(PowerTradeForecastReport report, String destination)
         {
             log.LogInformation($"Saving forecast report. Timestamp: {report.ExecutionTimestamp}. Forecasted day: {report.ForecastedDay}. ");
             report.Periods.ForEach(period => log.LogDebug($"Date in UTC: {period.DateTimeInUtc}, Volume: {period.AggregatedVolume}"));
