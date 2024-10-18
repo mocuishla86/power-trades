@@ -10,7 +10,9 @@ TODOS:
 
 # Links
 
-- Logs: https://learn.microsoft.com/en-us/dotnet/core/extensions/logging
+- Logs:
+	- https://learn.microsoft.com/en-us/dotnet/core/extensions/logging
+	- https://stackoverflow.com/a/75830211
 - Dependency Injection: https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection-usage
 - Reading Command Line Arguments: https://www.pietschsoft.com/post/2024/04/23/csharp-console-accept-commandline-arguments
 - Retries, etc: https://github.com/App-vNext/Polly

@@ -1,12 +1,21 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using PowerTrades.Application.inbound;
 using PowerTrades.Application.outbound;
 using PowerTrades.Domain.date;
 using PowerTrades.Domain.Date;
 using PowerTrades.Infrastructure.Outbound;
+using Serilog;
+using Serilog.Templates;
+using Serilog.Templates.Themes;
+
+
+Console.WriteLine("Application started");
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
+
+ConfigureLogging(builder);
 
 builder.Services.AddSingleton<IPowerTradeRepository, FakePowerTradeRepository>();
 builder.Services.AddSingleton<IDateTimeService, RealDateTimeService>();
@@ -24,5 +33,17 @@ static void Run(IServiceProvider hostProvider)
 
     useCase.GenerateForecastReport();
 
-    Console.WriteLine("...");
+    Console.WriteLine("Application finished...");
+}
+
+static void ConfigureLogging(HostApplicationBuilder builder)
+{
+    //See https://github.com/serilog/serilog-expressions?tab=readme-ov-file#formatting-with-expressiontemplate
+    var logFormat = "[{@t:HH:mm:ss}][{@l:u3}][{Substring(SourceContext, LastIndexOf(SourceContext, '.') + 1)}]: {@m}\n{@x}";
+    builder.Logging.ClearProviders(); //To remove default console log: https://github.com/serilog/serilog-aspnetcore/issues/92#issuecomment-502317672
+    builder.Services.AddLogging(builder => builder.AddSerilog(new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .WriteTo.Console(new ExpressionTemplate(logFormat, theme: TemplateTheme.Code))
+            .WriteTo.File(path: "logs.txt", rollingInterval: RollingInterval.Day, formatter: new ExpressionTemplate(logFormat))
+            .CreateLogger()));
 }

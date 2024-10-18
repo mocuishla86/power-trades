@@ -5,14 +5,20 @@ using PowerTrades.Domain.Power;
 using NodaTime.TimeZones;
 using NodaTime.Text;
 using System.Globalization;
+using Microsoft.Extensions.Logging;
 
 namespace PowerTrades.Application.inbound
 {
-    public class GeneratePowerTradeForecastReportUseCase(IPowerTradeRepository powerTradeRepository, IDateTimeService dateTimeService)
+    public class GeneratePowerTradeForecastReportUseCase(
+        IPowerTradeRepository powerTradeRepository, 
+        IDateTimeService dateTimeService,
+        ILogger<GeneratePowerTradeForecastReportUseCase> log
+        )
     {
         private const int HOURS_IN_DAY = 24;
 
         public PowerTradeForecastReport GenerateForecastReport() {
+            log.LogInformation("Generating forecast report");
             NodaTime.DateTimeZone zone = dateTimeService.GetLocalDateTimeZone();
             DateTime executionTimeStampInLocalTime = dateTimeService.GetCurrentLocalDateTime();
             DateTime forecastedDay = executionTimeStampInLocalTime.Date.AddDays(1);
