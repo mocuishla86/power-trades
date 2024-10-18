@@ -15,4 +15,10 @@
     <ProjectReference Include="..\PowerTrades.Application\PowerTrades.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="PowerService">
+      <HintPath>dependencies\PowerService\PowerService.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

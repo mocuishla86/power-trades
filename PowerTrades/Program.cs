@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Axpo;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using PowerTrades.Application.Inbound;
@@ -16,7 +17,8 @@ HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
 ConfigureLogging(builder);
 
-builder.Services.AddSingleton<IPowerTradeRepository, FakePowerTradeRepository>();
+builder.Services.AddSingleton<PowerService>();
+builder.Services.AddSingleton<IPowerTradeRepository, AxpoPowerTradeRepository>();
 builder.Services.AddSingleton<IDateTimeService, RealDateTimeService>();
 builder.Services.AddSingleton<GeneratePowerTradeForecastReportUseCase>();
 
