@@ -53,7 +53,7 @@ namespace PowerTrades.Application.Test.Inbound
             PowerTradeForecastReport report = sut.GenerateForecastReport("destination");
 
             report.ForecastedDay.Should().Be(expectedForecastedDay);
-            report.ExecutionTimestamp.Should().Be(expectedTimestamp);
+            report.ExecutionTimestampInUtc.Should().Be(expectedTimestamp);
             report.Periods[0].DateTimeInUtc.Should().Be(expectedFirstPeriodDateTime);
             reportRepository.Received().SaveReport(report, "destination");
         }

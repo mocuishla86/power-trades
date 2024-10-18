@@ -40,7 +40,7 @@ namespace PowerTrades.Application.Inbound
                             })
                             .ToList(),
                 ForecastedDay = forecastedDay,
-                ExecutionTimestamp = LocalTimeToUTC(zone, executionTimeStampInLocalTime)
+                ExecutionTimestampInUtc = LocalTimeToUTC(zone, executionTimeStampInLocalTime)
             };
             reportRepository.SaveReport(report, destination);
             return report;

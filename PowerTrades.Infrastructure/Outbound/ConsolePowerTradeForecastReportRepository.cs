@@ -13,7 +13,7 @@ namespace PowerTrades.Infrastructure.Outbound
     {
         public void SaveReport(PowerTradeForecastReport report, String destination)
         {
-            log.LogInformation($"Saving forecast report. Timestamp: {report.ExecutionTimestamp}. Forecasted day: {report.ForecastedDay}. ");
+            log.LogInformation($"Saving forecast report. Timestamp: {report.ExecutionTimestampInUtc}. Forecasted day: {report.ForecastedDay}. ");
             report.Periods.ForEach(period => log.LogDebug($"Date in UTC: {period.DateTimeInUtc}, Volume: {period.AggregatedVolume}"));
         }
     }

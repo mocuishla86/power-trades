@@ -1,6 +1,7 @@
 # power-trades
 
 TODOS:
+- Handle error writing file. 
 - Create the console adapter. We will have to read from console and call use case
 - Add logs. 
 - Create the Dll adapter. We will have to convert from DllModel to DomainModel and bacwards

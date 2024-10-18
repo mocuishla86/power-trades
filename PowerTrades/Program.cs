@@ -19,7 +19,7 @@ ConfigureLogging(builder);
 
 builder.Services.AddSingleton<PowerService>();
 builder.Services.AddSingleton<IPowerTradeRepository, AxpoPowerTradeRepository>();
-builder.Services.AddSingleton<IPowerTradeForecastReportRepository, ConsolePowerTradeForecastReportRepository>();
+builder.Services.AddSingleton<IPowerTradeForecastReportRepository, CsvFilePowerTradeForecastReportRepository>();
 builder.Services.AddSingleton<IDateTimeService, RealDateTimeService>();
 builder.Services.AddSingleton<GeneratePowerTradeForecastReportUseCase>();
 
@@ -33,7 +33,7 @@ static void Run(IServiceProvider hostProvider)
 
     var useCase = provider.GetRequiredService<GeneratePowerTradeForecastReportUseCase>();
 
-    useCase.GenerateForecastReport("c:/");
+    useCase.GenerateForecastReport(Path.GetTempPath());
 
     Console.WriteLine("Application finished...");
 }
