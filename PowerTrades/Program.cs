@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using PowerTrades;
 using PowerTrades.Application.Inbound;
 using PowerTrades.Application.Outbound;
 using PowerTrades.Domain.Date;
@@ -11,7 +12,7 @@ using Serilog.Templates;
 using Serilog.Templates.Themes;
 
 
-Console.WriteLine("Application started");
+ProgramParameters programParameters = ProgramParametersReader.Read(args);
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
@@ -24,16 +25,16 @@ builder.Services.AddSingleton<IDateTimeService, RealDateTimeService>();
 builder.Services.AddSingleton<GeneratePowerTradeForecastReportUseCase>();
 
 using IHost host = builder.Build();
-Run(host.Services);
+Run(host.Services, programParameters);
 
-static void Run(IServiceProvider hostProvider)
+static void Run(IServiceProvider hostProvider, ProgramParameters programParameters)
 {
     using IServiceScope serviceScope = hostProvider.CreateScope();
     IServiceProvider provider = serviceScope.ServiceProvider;
 
     var useCase = provider.GetRequiredService<GeneratePowerTradeForecastReportUseCase>();
 
-    useCase.GenerateForecastReport(Path.GetTempPath());
+    useCase.GenerateForecastReport(programParameters.DestinationFolder);
 
     Console.WriteLine("Application finished...");
 }

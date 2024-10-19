@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PowerTrades": {
+      "commandName": "Project",
+      "commandLineArgs": " --executionIntervalInMinutes=1 --destinationFolder=C:\\Users\\misab\\Documents\\ForecastReports"
+    }
+  }
+}
