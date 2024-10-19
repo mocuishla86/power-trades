@@ -43,5 +43,25 @@ namespace PowerTrades.Infrastructure.Test.Outbound
             domainTrades[1].Should().BeEquivalentTo(new PowerTrade {  Periods = [new PowerPeriod {  HourOfTheDay = 1, Volume = 66}] });
         }
 
+        [Fact(Timeout = 2_000)] //https://stackoverflow.com/a/20283707
+        public async Task it_retries_and_uses_the_fastest_successful_call()
+        {
+            DateTime now = DateTime.Now;
+            IEnumerable<Axpo.PowerTrade> axpoPowerTrades = [Axpo.PowerTrade.Create(now, 1)];
+            powerService.GetTradesAsync(now).Returns(
+                x => Task.Delay(1_000_000).ContinueWith(_ => axpoPowerTrades),
+                x => Task.Delay(1_000_000).ContinueWith(_ => axpoPowerTrades),
+                x => throw new Exception("Boom!"),
+                x => throw new Exception("Boom!"),
+                x => Task.Delay(1_000_000).ContinueWith(_ => axpoPowerTrades),
+                x => Task.Delay(1_000_000).ContinueWith(_ => axpoPowerTrades),
+                x => Task.FromResult(axpoPowerTrades)
+            );
+
+            var powerTrades = await sut.GetPowerTrades(now);
+
+            powerTrades.Should().NotBeNull();
+        }
+
     }
 }
