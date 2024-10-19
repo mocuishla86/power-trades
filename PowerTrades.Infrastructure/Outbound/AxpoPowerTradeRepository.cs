@@ -4,7 +4,7 @@ using PowerTrades.Domain.Power;
 
 namespace PowerTrades.Infrastructure.Outbound
 {
-    public class AxpoPowerTradeRepository(Axpo.PowerService powerService, ILogger<AxpoPowerTradeRepository> log) : IPowerTradeRepository
+    public class AxpoPowerTradeRepository(Axpo.IPowerService powerService, ILogger<AxpoPowerTradeRepository> log) : IPowerTradeRepository
     {
         public List<PowerTrade> GetPowerTrades(DateTime date)
         {

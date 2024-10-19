@@ -18,7 +18,7 @@ HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
 ConfigureLogging(builder);
 
-builder.Services.AddSingleton<PowerService>();
+builder.Services.AddSingleton<IPowerService,PowerService>();
 builder.Services.AddSingleton<IPowerTradeRepository, AxpoPowerTradeRepository>();
 builder.Services.AddSingleton<IPowerTradeForecastReportRepository, CsvFilePowerTradeForecastReportRepository>();
 builder.Services.AddSingleton<IDateTimeService, RealDateTimeService>();
