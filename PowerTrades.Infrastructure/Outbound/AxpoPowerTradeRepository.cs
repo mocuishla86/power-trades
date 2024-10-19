@@ -6,9 +6,9 @@ namespace PowerTrades.Infrastructure.Outbound
 {
     public class AxpoPowerTradeRepository(Axpo.IPowerService powerService, ILogger<AxpoPowerTradeRepository> log) : IPowerTradeRepository
     {
-        public List<PowerTrade> GetPowerTrades(DateTime date)
+        public async Task<List<PowerTrade>> GetPowerTrades(DateTime date)
         {
-            var axpoPowerTrades = powerService.GetTrades(date).ToList();
+            var axpoPowerTrades = (await powerService.GetTradesAsync(date)).ToList();
 
             log.LogInformation($"Axpo Power Trades retrieved from library: {axpoPowerTrades.Count}");
 

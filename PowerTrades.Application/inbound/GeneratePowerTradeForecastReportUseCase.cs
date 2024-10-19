@@ -18,7 +18,7 @@ namespace PowerTrades.Application.Inbound
     {
         private const int HOURS_IN_DAY = 24;
 
-        public PowerTradeForecastReport GenerateForecastReport(String destination)
+        public async Task<PowerTradeForecastReport> GenerateForecastReport(String destination)
         {
             log.LogInformation("Generating forecast report");
             DateTimeZone zone = dateTimeService.GetLocalDateTimeZone();
@@ -27,7 +27,7 @@ namespace PowerTrades.Application.Inbound
             DateTime forecastedDay = executionTimeStampInLocalTime.Date.AddDays(1);
             DateTime firstRowDateTimeInUtc = LocalTimeToUTC(zone, forecastedDay);
 
-            List<PowerTrade> powerTrades = powerTradeRepository.GetPowerTrades(forecastedDay);
+            List<PowerTrade> powerTrades = await powerTradeRepository.GetPowerTrades(forecastedDay);
             var aggregatedPowerTrade = powerTrades.Aggregate((a, b) => a + b);
 
             var report = new PowerTradeForecastReport

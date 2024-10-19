@@ -25,7 +25,7 @@ namespace PowerTrades.Application.Test.Inbound
         }
 
         [Fact]
-        public void shoud_create_report_from_power_trade_list()
+        public async Task shoud_create_report_from_power_trade_list()
         {
             dateTimeService.GetCurrentLocalDateTime().Returns(DateTime.Now);
             dateTimeService.GetLocalDateTimeZone().Returns(DateTimeZoneProviders.Tzdb["Europe/Madrid"]);
@@ -35,7 +35,7 @@ namespace PowerTrades.Application.Test.Inbound
                 PowerTrade.WithAllPeriodsWithVolume(50),
             ]);
 
-            var report = sut.GenerateForecastReport("destination");
+            var report = await sut.GenerateForecastReport("destination");
 
             report.Periods.Should().HaveCount(24);
             report.Periods.Should().AllSatisfy(period => period.AggregatedVolume.Should().Be(150));
@@ -44,13 +44,13 @@ namespace PowerTrades.Application.Test.Inbound
 
         [Theory]
         [MemberData(nameof(DateTimeScenarios))]
-        public void date_time_conversion_is_correctly_managed(DateTime localDateTime, string localTimeZone, DateTime expectedForecastedDay, DateTime expectedTimestamp, DateTime expectedFirstPeriodDateTime)
+        public async Task date_time_conversion_is_correctly_managed(DateTime localDateTime, string localTimeZone, DateTime expectedForecastedDay, DateTime expectedTimestamp, DateTime expectedFirstPeriodDateTime)
         {
             dateTimeService.GetCurrentLocalDateTime().Returns(localDateTime);
             dateTimeService.GetLocalDateTimeZone().Returns(DateTimeZoneProviders.Tzdb[localTimeZone]);
             powerTradeRepository.GetPowerTrades(expectedForecastedDay).Returns([PowerTrade.WithAllPeriodsWithVolume(100)]);
 
-            PowerTradeForecastReport report = sut.GenerateForecastReport("destination");
+            PowerTradeForecastReport report = await sut.GenerateForecastReport("destination");
 
             report.ForecastedDay.Should().Be(expectedForecastedDay);
             report.ExecutionTimestampInUtc.Should().Be(expectedTimestamp);

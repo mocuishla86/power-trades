@@ -25,16 +25,16 @@ builder.Services.AddSingleton<IDateTimeService, RealDateTimeService>();
 builder.Services.AddSingleton<GeneratePowerTradeForecastReportUseCase>();
 
 using IHost host = builder.Build();
-Run(host.Services, programParameters);
+await Run(host.Services, programParameters);
 
-static void Run(IServiceProvider hostProvider, ProgramParameters programParameters)
+static async Task Run(IServiceProvider hostProvider, ProgramParameters programParameters)
 {
     using IServiceScope serviceScope = hostProvider.CreateScope();
     IServiceProvider provider = serviceScope.ServiceProvider;
 
     var useCase = provider.GetRequiredService<GeneratePowerTradeForecastReportUseCase>();
 
-    useCase.GenerateForecastReport(programParameters.DestinationFolder);
+    await useCase.GenerateForecastReport(programParameters.DestinationFolder);
 
     Console.WriteLine("Application finished...");
 }

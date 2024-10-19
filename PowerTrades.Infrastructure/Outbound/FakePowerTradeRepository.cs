@@ -5,9 +5,9 @@ namespace PowerTrades.Infrastructure.Outbound
 {
     public class FakePowerTradeRepository : IPowerTradeRepository
     {
-        public List<PowerTrade> GetPowerTrades(DateTime date) => [
+        public Task<List<PowerTrade>> GetPowerTrades(DateTime date) => Task.FromResult<List<PowerTrade>>([
                 PowerTrade.WithAllPeriodsWithVolume(100),
                 PowerTrade.WithAllPeriodsWithVolume(50),
-            ];
+            ]);
     }
 }
