@@ -17,6 +17,24 @@ dotnet build
 
 - CSV Files and logs will appear inside folder `.\PowerTrades\bin\debug\net8.0`.
 
+## Architecture
+
+Hexagonal architecture followed:
+
+- **Domain**: Several domain concepts:
+	- **PowerTrade**.
+	- **PowerPeriod**. 
+	- **PowerTradeForecastReport**: the day report with its **ForecastedPowerPeriods**.
+	- **IDateTimeService**: to manage current date time, zone, etc. A real and a fake implementation for tests. 
+- **Inbound**:
+	- **Port**: `GeneratePowerTradeForecastReportUseCase`. **Adapter**: The console application program (`Program.cs`)
+- **Outbound**: 
+	-  **Port**: `IPowerTradeRepository` to get the power trades. Two **adapters**: a fake one for tests and the real one calling the Axpo library.
+	-  **Port**: `IPowerTradeForecastReportRepository`, to "save" the generated report. Two  **adapters**: a fake one for test (printing in console) and the real one writing the CSV file.
+		
+
+![](./img/architecture.svg)
+
 # Links
 
 - Logs:
