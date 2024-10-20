@@ -16,7 +16,7 @@ ProgramParameters programParameters = ProgramParametersReader.Read(args);
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
-ConfigureLogging(builder);
+ConfigureLogging(builder, programParameters);
 
 builder.Services.AddSingleton<IPowerService,PowerService>();
 builder.Services.AddSingleton<IPowerTradeRepository, AxpoPowerTradeRepository>();
@@ -45,7 +45,7 @@ static async Task Run(IServiceProvider hostProvider, ProgramParameters programPa
     Console.WriteLine("PowerTrades is running. Press any key to stop it...");
 }
 
-static void ConfigureLogging(HostApplicationBuilder builder)
+static void ConfigureLogging(HostApplicationBuilder builder, ProgramParameters programParameters)
 {
     //See https://github.com/serilog/serilog-expressions?tab=readme-ov-file#formatting-with-expressiontemplate
     var logFormat = "[{@t:HH:mm:ss}][{@l:u3}][{Substring(SourceContext, LastIndexOf(SourceContext, '.') + 1)}]: {@m}\n{@x}";
@@ -53,6 +53,6 @@ static void ConfigureLogging(HostApplicationBuilder builder)
     builder.Services.AddLogging(builder => builder.AddSerilog(new LoggerConfiguration()
             .MinimumLevel.Information()
             .WriteTo.Console(new ExpressionTemplate(logFormat, theme: TemplateTheme.Code))
-            .WriteTo.File(path: "logs.txt", rollingInterval: RollingInterval.Day, formatter: new ExpressionTemplate(logFormat))
+            .WriteTo.File(path: Path.Combine(programParameters.DestinationFolder,"logs.txt"), rollingInterval: RollingInterval.Day, formatter: new ExpressionTemplate(logFormat))
             .CreateLogger()));
 }
