@@ -35,6 +35,15 @@ Hexagonal architecture followed:
 
 ![](./img/architecture.svg)
 
+## Test
+
+- XUnit as test runner.
+- FluentAssertions used for assertion. 
+- NSubstitute used for mocking
+- Code coverage: 
+
+![](./img/Test_Coverage.png)
+
 # Links
 
 - Logs:
