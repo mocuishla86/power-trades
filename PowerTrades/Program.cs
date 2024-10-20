@@ -25,7 +25,14 @@ builder.Services.AddSingleton<IDateTimeService, RealDateTimeService>();
 builder.Services.AddSingleton<GeneratePowerTradeForecastReportUseCase>();
 
 using IHost host = builder.Build();
-await Run(host.Services, programParameters);
+
+int interval = programParameters.ExecutionIntervalInMinutes * 60 * 1000;
+//Source: ChatGPT
+using var timer = new Timer(async _ => await Run(host.Services, programParameters), null, 0, interval);
+
+Console.WriteLine("PowerTrades is running. Press any key to stop it...");
+Console.ReadLine();
+Console.WriteLine("Application finished...");
 
 static async Task Run(IServiceProvider hostProvider, ProgramParameters programParameters)
 {
@@ -35,8 +42,7 @@ static async Task Run(IServiceProvider hostProvider, ProgramParameters programPa
     var useCase = provider.GetRequiredService<GeneratePowerTradeForecastReportUseCase>();
 
     await useCase.GenerateForecastReport(programParameters.DestinationFolder);
-
-    Console.WriteLine("Application finished...");
+    Console.WriteLine("PowerTrades is running. Press any key to stop it...");
 }
 
 static void ConfigureLogging(HostApplicationBuilder builder)
@@ -45,7 +51,7 @@ static void ConfigureLogging(HostApplicationBuilder builder)
     var logFormat = "[{@t:HH:mm:ss}][{@l:u3}][{Substring(SourceContext, LastIndexOf(SourceContext, '.') + 1)}]: {@m}\n{@x}";
     builder.Logging.ClearProviders(); //To remove default console log: https://github.com/serilog/serilog-aspnetcore/issues/92#issuecomment-502317672
     builder.Services.AddLogging(builder => builder.AddSerilog(new LoggerConfiguration()
-            .MinimumLevel.Debug()
+            .MinimumLevel.Information()
             .WriteTo.Console(new ExpressionTemplate(logFormat, theme: TemplateTheme.Code))
             .WriteTo.File(path: "logs.txt", rollingInterval: RollingInterval.Day, formatter: new ExpressionTemplate(logFormat))
             .CreateLogger()));
